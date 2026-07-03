@@ -3,680 +3,747 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surat Perintah Lembur - MSB</title>
-    
+    <title>Minutes of Meeting - PT Murinda Sentra Baja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        
         :root {
-            --bg-body: #e2e8f0;
-            --bg-surface: #ffffff;
-            --text-main: #0f172a;
-            --text-muted: #475569;
-            --border-color: #cbd5e1;
-            --primary: #2563eb;
-            --success: #10b981;
-            --danger: #ef4444;
+            /* Palette Terang ala Gemini Modern */
+            --primary: #1A73E8;
+            --secondary: #12B5CB;
+            --accent: #F9AB00;
+            --bg-base: #f0f4f8;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.7);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --neon-glow: 0 0 20px rgba(18, 181, 203, 0.3);
+            --neon-blue: 0 0 20px rgba(26, 115, 232, 0.2);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+        
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
+            background-color: var(--bg-base);
             color: var(--text-main);
-            margin: 0;
-            padding: 30px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(26, 115, 232, 0.05), transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(18, 181, 203, 0.05), transparent 40%);
         }
 
-        /* --- TAMPILAN LOGIN --- */
-        #loginScreen {
-            background: white;
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
             padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            margin-top: 50px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.05), inset 0 0 0 1px rgba(255,255,255,0.6);
+            position: relative;
         }
-        #loginScreen h2 { margin-top: 0; color: var(--primary); }
-        .login-group { margin-bottom: 15px; text-align: left; }
-        .login-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 5px; color: var(--text-muted); }
-        .login-group select, .login-group input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); box-sizing: border-box; }
-        .btn-login { width: 100%; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px;}
-        .btn-login:hover { background: #1d4ed8; }
-        .btn-login:disabled { background: #94a3b8; cursor: not-allowed; }
 
-        /* --- TAMPILAN REKAPAN (USER) --- */
-        #rekapanScreen {
-            background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%; max-width: 800px; display: none;
+        .container::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 24px 24px 0 0;
         }
-        .header-rekapan { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 15px;}
-        .header-rekapan h2 { margin: 0; color: #0f172a;}
-        .disclaimer-text { font-size: 12px; color: #b91c1c; background: #fee2e2; padding: 10px; border-radius: 6px; margin-bottom: 20px; border: 1px solid #fca5a5; font-weight: 500; }
-        .table-rekapan { width: 100%; border-collapse: collapse; font-size: 13px;}
-        .table-rekapan th, .table-rekapan td { border: 1px solid #cbd5e1; padding: 10px; text-align: left; }
-        .table-rekapan th { background: #f1f5f9; }
 
-        /* --- TAMPILAN ADMIN (FORM LEMBUR) --- */
-        #adminScreen { display: none; width: 100%; flex-direction: column; align-items: center; }
-
-        /* Controls */
-        .controls-wrapper {
-            width: 100%; max-width: 210mm; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--bg-surface); padding: 16px 24px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); box-sizing: border-box; border: 1px solid #e2e8f0;
-        }
-        .status-badge { font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 30px; background: #fef08a; color: #854d0e; display: flex; align-items: center; gap: 8px; }
-        .action-buttons button { padding: 10px 20px; border: none; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.2s ease; margin-left: 10px; }
+        /* Web Header */
+        .header-title { text-align: center; margin-bottom: 30px; }
+        .company-logo { height: 65px; object-fit: contain; margin-bottom: 15px; border-radius: 8px;}
         
-        .btn-print { background: #f8fafc; color: #334155; border: 1px solid var(--border-color); }
-        .btn-print:hover:not(:disabled) { background: #e2e8f0; }
-        .btn-print:disabled { opacity: 0.4; cursor: not-allowed; }
-        .btn-save { background: var(--success); color: white; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2); }
-        .btn-save:hover:not(:disabled) { background: #059669; transform: translateY(-1px); }
-        .btn-save:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-logout { background: #fee2e2; color: #b91c1c; margin-left: 10px;}
-        .btn-admin-nav { background: #e0f2fe; color: #0284c7; border: 1px solid #7dd3fc; }
-        .btn-admin-nav:hover { background: #bae6fd; }
+        .header-title h1 {
+            font-size: 2.3rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+        }
 
-        /* Kertas A4 */
-        .document-a4 { width: 210mm; min-height: 297mm; background: var(--bg-surface); padding: 15mm 15mm; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); box-sizing: border-box; position: relative; display: flex; flex-direction: column; }
-        .header-doc { display: grid; grid-template-columns: 100px 1fr 180px; align-items: center; gap: 15px; border-bottom: 4px double #0f172a; padding-bottom: 15px; margin-bottom: 20px; }
-        .header-logo img { width: 100%; max-height: 60px; object-fit: contain; }
-        .header-title { text-align: center; }
-        .header-title h1 { margin: 0; font-size: 22px; font-weight: 800; text-transform: uppercase; color: #0f172a; }
-        .header-title p { margin: 4px 0 0 0; font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; }
+        .id-badge {
+            display: inline-block; background: rgba(26, 115, 232, 0.08); border: 1px solid rgba(26, 115, 232, 0.15);
+            color: var(--primary); padding: 6px 16px; border-radius: 50px; font-size: 0.9rem;
+            margin-top: 10px; font-weight: 600;
+        }
 
-        .doc-control-table { width: 100%; border-collapse: collapse; font-size: 9px; background: white; }
-        .doc-control-table td { border: 1px solid #0f172a; padding: 4px 6px; }
-        .doc-control-table td:first-child { font-weight: 700; background-color: #f1f5f9; width: 70px; }
+        .status-mode-badge {
+            display: inline-block; padding: 6px 16px; border-radius: 50px; font-size: 0.9rem;
+            margin-top: 10px; font-weight: 600; border: 1px solid transparent; margin-left: 8px;
+            transition: var(--transition);
+        }
 
-        .info-section { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; background: #f8fafc; padding: 12px 15px; border-radius: 8px; border: 1px solid var(--border-color); }
-        .info-group { display: flex; flex-direction: column; gap: 4px; }
-        .info-group label { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px; }
+        /* Panel Kontrol & Akses */
+        .control-panel {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .panel-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .panel-card h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: var(--text-main);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .flex-inputs {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .print-only-header { display: none; }
+
+        .section-title {
+            font-size: 1.2rem; color: var(--primary); margin: 35px 0 20px 0;
+            border-bottom: 2px solid rgba(26, 115, 232, 0.1); padding-bottom: 8px;
+            display: flex; justify-content: space-between; align-items: center; font-weight: 700;
+        }
+
+        /* Forms & Inputs */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .form-group label { display: block; margin-bottom: 6px; font-size: 0.88rem; color: var(--text-main); font-weight: 600; }
         
-        input, select { width: 100%; border: 1px solid var(--border-color); border-radius: 4px; padding: 8px; font-family: inherit; font-size: 11px; box-sizing: border-box; background-color: #ffffff; transition: all 0.2s; }
-        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
-        input[readonly]:not(.date-trick) { background-color: #f1f5f9; cursor: not-allowed; color: var(--text-muted); }
+        .time-flex { display: flex; gap: 10px; align-items: center; }
+        .time-flex span { font-weight: 600; color: var(--text-muted); font-size: 0.9rem; }
 
-        .main-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; table-layout: fixed; }
-        .main-table th { background-color: #f1f5f9; border: 1px solid #334155; padding: 10px 4px; font-size: 10px; font-weight: 700; text-align: center; text-transform: uppercase; }
-        .main-table td { border: 1px solid #334155; padding: 6px 4px; text-align: center; vertical-align: middle; word-wrap: break-word; }
-        .main-table td:nth-child(4), .main-table td:nth-child(5) { text-align: left; }
-        .sign-col { vertical-align: middle !important; padding: 8px 6px !important; font-size: 11px; color: var(--text-muted); }
+        input, textarea, select {
+            width: 100%; padding: 11px 14px; background: #ffffff;
+            border: 1px solid #cbd5e1; border-radius: 10px;
+            color: var(--text-main); font-size: 0.95rem; transition: var(--transition);
+        }
+        input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: var(--neon-blue); }
+        input:disabled, select:disabled, textarea:disabled { background: #f1f5f9; color: #94a3b8; cursor: not-allowed; border-color: #e2e8f0; }
 
-        .btn-add-row { width: 100%; padding: 12px; background: #eff6ff; color: var(--primary); border: 2px dashed #93c5fd; border-radius: 8px; font-weight: 600; font-size: 13px; cursor: pointer; margin-bottom: 30px; }
-        .btn-add-row:hover:not(:disabled) { background: #dbeafe; }
-        .btn-delete { background: #fee2e2; color: var(--danger); border: none; border-radius: 4px; padding: 6px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%; }
+        /* Tables (Web View) */
+        table { width: 100%; border-collapse: separate; border-spacing: 0 6px; margin-bottom: 20px; }
+        th { text-align: left; padding: 12px; color: var(--text-muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0;}
+        td { padding: 4px; }
+        tbody tr { background: rgba(255, 255, 255, 0.5); border-radius: 8px;}
 
-        .footer-signatures { margin-top: 40px; display: flex; justify-content: space-between; text-align: center; font-size: 12px; page-break-inside: avoid; }
-        .sign-box { width: 28%; display: flex; flex-direction: column; justify-content: space-between; height: 110px; }
-        .sign-title { font-weight: 500; margin-bottom: 20px; }
-        .sign-line { border-bottom: 1px solid #000; margin: 0 10px 4px 10px; }
-        .name-text { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
-        .role-text { font-weight: 500; color: var(--text-muted); font-size: 11px; }
+        /* Buttons */
+        button { cursor: pointer; padding: 10px 20px; border-radius: 10px; font-weight: 600; border: none; transition: var(--transition); display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+        .btn-add { background: rgba(26, 115, 232, 0.08); color: var(--primary); border: 1px solid rgba(26, 115, 232, 0.2); font-size: 0.85rem; }
+        .btn-add:hover:not(:disabled) { background: var(--primary); color: white; }
+        
+        .btn-remove { background: #fef2f2; border: 1px solid #fecaca; color: #ef4444; padding: 10px; border-radius: 8px; width: 100%; }
+        .btn-remove:hover { background: #ef4444; color: white; }
 
-        /* System Footer (QR Code & Barcode) */
-        .system-footer { margin-top: auto; padding-top: 20px; border-top: 2px dashed #cbd5e1; display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #334155; }
-        .system-footer .qr-box img { width: 55px; height: 55px; }
-        .system-footer .meta-info { flex: 1; padding: 0 15px; }
-        .system-footer .meta-info strong { display: block; margin-top: 4px; font-size: 11px; color: #000; }
-        .system-footer .barcode-box { text-align: right; }
-        .system-footer .barcode-box svg { max-height: 45px; }
+        .actions { display: flex; gap: 15px; justify-content: center; margin-top: 35px; }
+        .btn-save { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-size: 1rem; padding: 12px 35px; box-shadow: var(--neon-blue); }
+        .btn-save:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 8px 16px rgba(26, 115, 232, 0.25); }
+        
+        .btn-print { background: white; color: var(--text-main); border: 1px solid #cbd5e1; font-size: 1rem; padding: 12px 25px;}
+        .btn-print:hover { background: #f8fafc; border-color: var(--primary); color: var(--primary); }
 
+        .loader { display: none; margin-left: 5px; font-size: 0.85rem; }
+        .status-badge { font-size: 0.75rem; padding: 4px 10px; border-radius: 50px; background: rgba(18, 181, 203, 0.1); color: var(--secondary); margin-left: 10px; border: 1px solid rgba(18, 181, 203, 0.3); display: none; }
+        .system-print-footer { display: none; }
+
+        @media (max-width: 768px) {
+            .control-panel { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+
+        /* ====================================================
+           MEDIA PRINT - DESAIN CORPORATE MODERN & PREMIUM
+        ==================================================== */
         @media print {
-            @page { size: A4 portrait; margin: 10mm; }
-            body { background: white; padding: 0; align-items: flex-start; }
-            #loginScreen, #rekapanScreen, .controls-wrapper, .btn-add-row, .action-col, .btn-delete { display: none !important; }
-            #adminScreen { display: flex !important; }
-            .document-a4 { box-shadow: none; padding: 0; width: 100%; height: 277mm; } 
-            .info-section { background: transparent; border: none; padding: 0; gap: 20px; border-bottom: 2px solid #000; border-radius: 0; padding-bottom: 15px; }
-            .info-group label { color: #000; }
-            .info-group input { border: none !important; border-bottom: 1px dotted #000 !important; border-radius: 0; padding: 4px 0; background: transparent; }
-            .main-table input, .main-table select { border: none !important; background: transparent !important; padding: 0 !important; color: black !important; appearance: none; -webkit-appearance: none; }
-            .main-table th { background-color: #f3f4f6 !important; -webkit-print-color-adjust: exact; color: #000; }
-            .doc-control-table th, .doc-control-table td { color: #000; }
-            .sign-col { color: black; }
-            .system-footer { border-top: 2px solid #000; }
+            @page { size: A4; margin: 18mm 15mm 18mm 15mm; }
+            
+            body { background: white !important; color: #0f172a !important; padding: 0 !important; margin: 0 !important; font-family: 'Segoe UI', Arial, sans-serif !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
+            .container { 
+                background: white !important; border: none !important; box-shadow: none !important; 
+                border-radius: 0 !important; padding: 0 !important; max-width: 100% !important; 
+                backdrop-filter: none !important; -webkit-backdrop-filter: none !important;
+            }
+            .container::before { display: none !important; }
+            
+            /* Sembunyikan Komponen Web Kontrol */
+            .control-panel, .btn-add, .btn-remove, .actions, .id-badge, .status-mode-badge, .status-badge, .btn-remove-col, .company-logo { display: none !important; }
+
+            /* Header ISO (Logo & Alamat bersusun di kiri) */
+            .print-only-header {
+                display: flex !important;
+                justify-content: space-between;
+                align-items: flex-start;
+                border-bottom: 2px solid #0f172a; 
+                padding-bottom: 15px;
+                margin-bottom: 25px;
+            }
+            
+            /* Perbaikan: Logo di atas, Alamat di bawahnya (Rata Kiri) */
+            .ph-left { 
+                display: flex; 
+                flex-direction: column; /* Tersusun vertikal */
+                align-items: flex-start; /* Rata kiri */
+                gap: 8px; 
+                text-align: left; 
+            }
+            .ph-left img { height: 60px; object-fit: contain; }
+            .ph-address {
+                font-size: 8pt;
+                line-height: 1.4;
+                color: #334155;
+            }
+            
+            /* Modern Nomor Form ISO */
+            .ph-right { text-align: right; }
+            .iso-table { 
+                border-collapse: collapse; 
+                font-size: 8pt; 
+                width: auto; 
+                margin: 0 0 0 auto; 
+                border: 1px solid #cbd5e1 !important; 
+                border-radius: 4px;
+            }
+            .iso-table td { 
+                border: none !important;
+                border-bottom: 1px solid #e2e8f0 !important; 
+                padding: 5px 12px !important; 
+                text-align: left; 
+                color: #0f172a;
+            }
+            .iso-table tr:last-child td { border-bottom: none !important; }
+            .iso-table td:first-child { 
+                background-color: #f8fafc !important; 
+                font-weight: 600; 
+                color: #475569; 
+                border-right: 1px solid #e2e8f0 !important; 
+            }
+
+            /* Judul Utama Rata Tengah */
+            .header-title { margin-bottom: 25px; text-align: center !important; }
+            .header-title h1 { 
+                -webkit-text-fill-color: #0f172a !important; background: none !important; color: #0f172a !important; 
+                font-size: 18pt !important; margin: 0 auto; font-weight: 800; letter-spacing: 0.5px;
+                text-transform: uppercase;
+            }
+            .header-title::after { 
+                content: 'MEETING ID: ' attr(data-print-id); 
+                display: inline-block; font-size: 9pt; color: #475569; margin-top: 8px; 
+                font-weight: 600; padding: 3px 12px; border: 1px solid #cbd5e1; border-radius: 20px; background: #f8fafc;
+            }
+
+            /* Judul Seksi Formal */
+            .section-title { 
+                color: #0f172a !important; border-bottom: 1.5px solid #64748b !important; 
+                font-size: 11pt !important; margin: 22px 0 12px 0 !important; padding-bottom: 4px !important; 
+                text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;
+            }
+
+            /* Desain Input Informasi Rapat */
+            .grid-2 { gap: 15px !important; row-gap: 15px !important; }
+            .form-group label { color: #475569 !important; font-size: 8.5pt !important; margin-bottom: 2px !important; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3px;}
+            
+            input, textarea, select { 
+                border: none !important; background: transparent !important; padding: 3px 0 !important; 
+                box-shadow: none !important; color: #0f172a !important; border-radius: 0 !important;
+                border-bottom: 1px dashed #cbd5e1 !important; font-size: 10pt !important; font-weight: 500;
+            }
+            .time-flex span { color: #475569 !important; }
+
+            /* ==================================================== */
+            /* Perbaikan Tabel: Clean Modern Corporate Grid         */
+            /* ==================================================== */
+            table#tableHadir, table#tableBahas { 
+                border-collapse: collapse !important; 
+                margin-bottom: 20px !important; 
+                width: 100% !important; 
+            }
+            th { 
+                color: #1e293b !important; 
+                border: 1px solid #94a3b8 !important; /* Garis pembatas header tegas namun tidak jadul */
+                background-color: #f1f5f9 !important; /* Warna latar abu lembut modern */
+                padding: 10px 12px !important; 
+                font-size: 9pt !important; 
+                text-align: center !important; 
+                font-weight: 700 !important; 
+                letter-spacing: 0.3px;
+            }
+            td { 
+                border: 1px solid #cbd5e1 !important; /* Garis grid full yang halus tipis */
+                padding: 8px 12px !important; 
+                background: transparent !important; 
+                vertical-align: middle;
+            }
+            tbody tr { background: transparent !important; border-radius: 0 !important; }
+            
+            td input { border-bottom: none !important; padding: 0 !important; font-size: 9.5pt !important; width: 100%;}
+
+            /* Footer Dokumen Legitimasi */
+            .system-print-footer { 
+                display: flex !important; justify-content: space-between !important; align-items: flex-end !important; 
+                margin-top: 45px !important; padding-top: 15px !important; page-break-inside: avoid !important;
+                border-top: 1px dashed #cbd5e1;
+            }
+            .qr-code-box { display: flex; align-items: center; gap: 12px; padding: 4px; }
+            .qr-text { font-size: 8pt; color: #475569; line-height: 1.4; }
+            .print-time-badge { margin-top: 4px; font-size: 7.5pt; color: #94a3b8; font-style: italic; }
+            .barcode-box svg { max-height: 45px; }
         }
     </style>
 </head>
 <body>
 
-<datalist id="jam-lembur-options">
-    <option value="16:00 - 18:00">
-    <option value="16:00 - 21:00">
-    <option value="17:00 - 18:00">
-    <option value="17:00 - 21:00">
-    <option value="16:30 - 18:00">
-    <option value="16:30 - 21:00"></option>
-    <option value="08:00 - 16:00">
-</datalist>
+<datalist id="listKaryawan"></datalist>
 
-<div id="loginScreen">
-    <img src="MSB Logo.png" alt="Logo MSB" style="max-height: 40px; margin-bottom: 15px;">
-    <h2>Portal Lembur</h2>
-    <p style="font-size: 13px; color: #64748b; margin-bottom: 25px;">Masuk menggunakan Nama dan Sandi (ID Karyawan/NIK)</p>
+<div class="container" id="doc-container">
     
-    <div class="login-group">
-        <label>Pilih Karyawan</label>
-        <select id="loginNama" disabled>
-            <option value="">⏳ Memuat Data Karyawan...</option>
-        </select>
-    </div>
-    <div class="login-group">
-        <label>Kata Sandi</label>
-        <input type="password" id="loginPass" placeholder="Masukkan ID Karyawan">
-    </div>
-    <button class="btn-login" id="btnLoginBtn" onclick="prosesLogin()" disabled>Masuk Sistem</button>
-</div>
-
-<div id="rekapanScreen">
-    <div class="header-rekapan">
-        <div>
-            <h2>Rekapan Lembur Saya</h2>
-            <p style="margin:5px 0 0 0; font-size:14px; color:#475569;" id="rekapanInfo">Nama: - | ID: -</p>
+    <!-- ISO Header Cetak Resmi -->
+    <div class="print-only-header">
+        <div class="ph-left">
+            <img src="MSB Logo.png" alt="Logo Perusahaan">
+            <div class="ph-address">
+                <strong>PT MURINDA SENTRA BAJA</strong><br>
+                Jl. Raya Kalijati Purwadadi No. 123A RT 006/02, Desa Kalijati Barat<br>
+                Kec. Kalijati, Kab. Subang, Jawa Barat 41271 (Exit Toll Kalijati)<br>
+                Telp: (+62260) 7495467 &nbsp;|&nbsp; Faks: (+62260) 7495222 &nbsp;|&nbsp; Email: plant@murinda.com
+            </div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-admin-nav" id="btnToAdminPanel" onclick="showAdmin()" style="display: none; padding: 10px 15px; border-radius: 6px; cursor:pointer; font-weight:bold;">⚙️ Mode Admin Form</button>
-            <button class="btn-logout" onclick="logout()" style="padding: 10px 15px; border: none; border-radius: 6px; cursor:pointer; font-weight:bold;">Keluar</button>
+        <div class="ph-right">
+            <table class="iso-table">
+                <tr><td>No. Dokumen</td><td>: MSB/F-MOM-01</td></tr>
+                <tr><td>Revisi</td><td>: 00</td></tr>
+                <tr><td>Tgl Efektif</td><td>: 01 JUNI 2026</td></tr>
+            </table>
         </div>
     </div>
-    
-    <div class="disclaimer-text">
-        ⚠️ <strong>Catatan:</strong> Data ini bukan acuan mutlak untuk menghitung jumlah lembur maupun kompensasi, melainkan sekedar rekapan form pengajuan. Perhitungan valid tetap bergantung pada absensi dan data di HRD.
+
+    <!-- Title & Badge Status -->
+    <div class="header-title" id="header-title">
+        <img src="MSB Logo.png" alt="Logo Perusahaan" class="company-logo">
+        <h1>Minutes of Meeting</h1>
+        <div class="id-badge" id="displayId">ID: Menunggu...</div>
+        <div class="status-mode-badge" id="displayModeBadge">Mode: Memuat...</div>
     </div>
 
-    <table class="table-rekapan">
-        <thead>
+    <!-- Panel Kontrol: Integrasi Cetak Ulang & Login Ringkas -->
+    <div class="control-panel">
+        <!-- Fitur Publik: Tarik Data Dropdown -->
+        <div class="panel-card">
+            <h3>🔍 Penarikan & Cetak Ulang Dokumen</h3>
+            <div class="flex-inputs">
+                <select id="reprintId" style="flex: 1;">
+                    <option value="">-- Memuat ID Rapat... --</option>
+                </select>
+                <button class="btn-print" onclick="fetchReprintData()" style="padding: 11px 20px; white-space: nowrap;">Tarik Data</button>
+            </div>
+            <span id="reprintLoader" class="loader" style="color: var(--primary); margin-top: 8px;">Mencari data...</span>
+        </div>
+
+        <!-- Fitur Autentikasi Mudah -->
+        <div class="panel-card">
+            <h3>🔒 Otentikasi Akses Editor</h3>
+            <div class="flex-inputs">
+                <select id="loginUser">
+                    <option value="Aspuro Amarulloh Khoiri">Aspuro Amarulloh Khoiri (Editor)</option>
+                </select>
+                <input type="password" id="loginPassword" placeholder="Kata Sandi">
+                <button id="btnLogin" class="btn-add" onclick="toggleLogin()" style="padding: 11px 20px;">Masuk</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Form Utama Informasi Rapat -->
+    <div class="section-title">Informasi Rapat</div>
+    <div class="grid-2">
+        <div class="form-group"><label>Judul Rapat</label><input type="text" id="judulRapat" placeholder="Topik utama pembahasan..."></div>
+        <div class="form-group"><label>Tempat / Platform</label><input type="text" id="tempat" placeholder="Ruang Rapat / Zoom / Teams..."></div>
+        <div class="form-group"><label>Hari dan Tanggal</label><input type="date" id="tanggal"></div>
+        
+        <div class="form-group">
+            <label>Waktu Pelaksanaan</label>
+            <div class="time-flex">
+                <input type="time" id="waktuMulai">
+                <span>s/d</span>
+                <input type="time" id="waktuSelesai">
+            </div>
+        </div>
+        
+        <div class="form-group"><label>Pimpinan Rapat (Chairperson)</label><input type="text" id="pimpinan" list="listKaryawan" placeholder="Pilih atau ketik nama..."></div>
+        <div class="form-group"><label>Notulen (Scribe)</label><input type="text" id="notulen" list="listKaryawan" placeholder="Pilih atau ketik nama..."></div>
+    </div>
+
+    <!-- Table Daftar Hadir -->
+    <div class="section-title">
+        <div>Daftar Hadir Peserta Rapat <span id="karyawanStatus" class="status-badge">● Master Karyawan Aktif</span></div>
+        <button class="btn-add" id="btnAddHadir" onclick="addHadirRow()">+ Tambah Peserta</button>
+    </div>
+    <table id="tableHadir">
+        <thead><tr><th>Nama Lengkap</th><th>Jabatan / Departemen</th><th width="50" class="btn-remove-col">Aksi</th></tr></thead>
+        <tbody id="bodyHadir">
             <tr>
-                <th width="5%">No</th>
-                <th width="20%">Tanggal</th>
-                <th width="55%">Tugas</th>
-                <th width="20%">Waktu Jam</th>
+                <td><input type="text" class="hadir-nama" list="listKaryawan" oninput="autoFillJabatan(this)" placeholder="Ketik nama..."></td>
+                <td><input type="text" class="hadir-jabatan" placeholder="Jabatan akan terisi secara otomatis..."></td>
+                <td class="btn-remove-col"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
             </tr>
-        </thead>
-        <tbody id="rekapanBody">
-            <tr><td colspan="4" style="text-align:center;">Memuat data lembur...</td></tr>
         </tbody>
     </table>
-</div>
 
-<div id="adminScreen">
-    <div class="controls-wrapper">
-        <div class="status-badge" id="statusInfo">✅ Admin Mode</div>
-        <div class="action-buttons">
-            <button class="btn-admin-nav" onclick="showRekapan()">📋 Rekapan Saya</button>
-            <button class="btn-print" id="btnPrint" onclick="window.print()" disabled title="Simpan data terlebih dahulu untuk mencetak">🖨️ Cetak Dokumen</button>
-            <button class="btn-save" id="btnSave" onclick="simpanLemburan()">💾 Simpan Data</button>
-            <button class="btn-logout" onclick="logout()" style="padding: 10px 15px; border: none; border-radius: 6px; cursor:pointer; font-weight:bold;">Keluar</button>
-        </div>
+    <!-- Table Poin Pembahasan -->
+    <div class="section-title">
+        Poin Pembahasan & Keputusan Resmi
+        <button class="btn-add" id="btnAddBahas" onclick="addBahasRow()">+ Tambah Poin</button>
+    </div>
+    <table id="tableBahas">
+        <thead><tr><th>Poin Pembahasan</th><th>Keputusan (Decisions)</th><th>Tugas Eksekusi Lanjutan</th><th>PIC</th><th width="50" class="btn-remove-col">Aksi</th></tr></thead>
+        <tbody id="bodyBahas">
+            <tr>
+                <td><input type="text" class="bahas-point" placeholder="Topik materi..."></td>
+                <td><input type="text" class="bahas-keputusan" placeholder="Keputusan kesepakatan..."></td>
+                <td><input type="text" class="bahas-tugas" placeholder="Rencana aksi..."></td>
+                <td><input type="text" class="bahas-pic" list="listKaryawan" placeholder="Nama PIC"></td>
+                <td class="btn-remove-col"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <input type="hidden" id="idRapat">
+
+    <!-- Tombol Aksi Web -->
+    <div class="actions">
+        <button class="btn-save" id="btnSave" onclick="saveData()">
+            ✨ Simpan Data ke Sistem <span id="saveLoader" class="loader" style="color:white;">...</span>
+        </button>
+        <button class="btn-print" onclick="prepareAndPrint()">🖨️ Cetak Dokumen</button>
     </div>
 
-    <div class="document-a4">
-        <div class="header-doc">
-            <div class="header-logo">
-                <img src="MSB Logo.png" alt="Logo MSB" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'100\' height=\'40\'><rect width=\'100\' height=\'40\' fill=\'%23e2e8f0\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-size=\'12\' fill=\'%23475569\' font-family=\'sans-serif\'>LOGO</text></svg>'">
-            </div>
-            <div class="header-title">
-                <h1>PT Murinda Sentra Baja</h1>
-                <p>Plant Subang - Jl. Raya Kalijati, Subang, Jawa Barat</p>
-            </div>
-            <div class="header-meta">
-                <table class="doc-control-table">
-                    <tr><td>No. Dok</td><td>: MSB/F-HR-05</td></tr>
-                    <tr><td>Revisi</td><td>: 00</td></tr>
-                    <tr><td>Halaman</td><td>: 1 dari 1</td></tr>
-                </table>
+    <!-- Footer Otentikasi Cetak -->
+    <div class="system-print-footer">
+        <div class="qr-code-box">
+            <div id="qrcode"></div>
+            <div class="qr-text">
+                <strong>Dokumen Resmi Terverifikasi Digital</strong><br>
+                Sistem Penilaian Kinerja & Notulensi Internal<br>
+                Pindai QR Code untuk memeriksa validitas ID dokumen.
+                <div class="print-time-badge" id="printTimestamp">Waktu Cetak: -</div>
             </div>
         </div>
-
-        <div class="info-section">
-            <div class="info-group">
-                <label>PERIHAL</label>
-                <input type="text" id="inpPerihal" value="Surat Perintah Lembur" oninput="markUnsaved()">
-            </div>
-            <div class="info-group">
-                <label>HARI, TANGGAL</label>
-                <input type="text" id="inpTanggal" class="date-trick" placeholder="Pilih Tanggal..." 
-                       onfocus="this.type='date'" 
-                       onblur="prosesTanggalFormat(this)" onchange="markUnsaved()">
-            </div>
-            <div class="info-group">
-                <label>KEPADA</label>
-                <input type="text" id="inpKepada" value="Human Resource Dept." oninput="markUnsaved()">
-            </div>
-        </div>
-
-        <table class="main-table">
-            <colgroup>
-                <col style="width: 5%;"> 
-                <col style="width: 14%;"> 
-                <col style="width: 15%;"> 
-                <col style="width: 25%;"> 
-                <col style="width: 20%;"> 
-                <col style="width: 10%;"> 
-                <col style="width: 6%;"> 
-                <col style="width: 5%;" class="action-col">
-            </colgroup>
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>NIK</th>
-                    <th>Jabatan</th>
-                    <th>Nama Karyawan</th>
-                    <th>Tugas / Pekerjaan</th>
-                    <th>Waktu Jam</th>
-                    <th>TTD</th>
-                    <th class="action-col">Aksi</th>
-                </tr>
-            </thead>
-            <tbody id="tableData">
-                </tbody>
-        </table>
-
-        <button class="btn-add-row" id="btnAddRow" onclick="tambahBaris()">+ Tambah Karyawan Lembur</button>
-
-        <div class="footer-signatures">
-            <div class="sign-box">
-                <div class="sign-title">Diterima Oleh,</div>
-                <div>
-                    <div class="sign-line"></div>
-                    <div class="role-text">Human Resource Dept.</div>
-                </div>
-            </div>
-            <div class="sign-box">
-                <div class="sign-title">Disetujui Oleh,</div>
-                <div>
-                    <div class="name-text">Petrus Suhandoyo</div>
-                    <div class="sign-line"></div>
-                    <div class="role-text">Production Manager</div>
-                </div>
-            </div>
-            <div class="sign-box">
-                <div class="sign-title">Diketahui Oleh,</div>
-                <div>
-                    <div class="sign-line"></div>
-                    <div class="role-text">Production Supervisor</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="system-footer">
-            <div class="qr-box">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=https://murindasentrabaja.github.io/Minutes-Of-Meeting-MOM-/" alt="QR GitHub">
-            </div>
-            <div class="meta-info">
-                Dokumen ini dicetak dan dibuat serta disimpan secara otomatis melalui Sistem Lembur MSB.<br>
-                Validasi form dapat dipindai melalui QR Code di samping.
-                <strong>No. Dok: MSB-HRD-FRM-04 | Revisi: Rev.00</strong>
-            </div>
-            <div class="barcode-box">
-                <svg id="barcode"></svg>
-            </div>
-        </div>
+        <div class="barcode-box"><svg id="barcode"></svg></div>
     </div>
 </div>
 
 <script>
-    // --- GANTI URL INI DENGAN URL DEPLOYMENT APPS SCRIPT ANDA YANG BARU ---
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxoQ27VNaPHtNEkSRcRrbSMgFQi5h2Mqi9Rs1qU3MiLzvyRWWZNiUai1WdzNNpLCd1E0w/exec";
-    
-    // Konfigurasi Admin
-    const ADMIN_USERS = ["Asep Suherman", "Aspuro Amarulloh Khoiri"];
-    
-    let normalizedData = [];
-    let optionsHTML = '<option value="">-- Pilih --</option>';
-    let currentUser = null;
-    let isSaved = false;
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby9Vj8Kf1WsxyDSuwZ_lW8h5e7_1W20e1WgRGTxg2Y1nHUO9I56oAB7MFUxanH_eCZDdA/exec'; 
+    let dataKaryawanGlobal = [];
+    let isLoggedIn = false;
 
-    document.addEventListener("DOMContentLoaded", () => {
-        fetchKaryawanInit();
+    window.onload = () => {
+        const newId = "MOM-" + Date.now().toString().slice(-6);
+        document.getElementById('idRapat').value = newId;
+        document.getElementById('displayId').innerText = "ID: " + newId;
+        document.getElementById('header-title').setAttribute('data-print-id', newId);
         
-        let today = new Date();
-        let inpTgl = document.getElementById('inpTanggal');
-        inpTgl.dataset.rawDate = today.toISOString().split('T')[0];
-        inpTgl.value = formatTanggalIndo(inpTgl.dataset.rawDate);
+        fetchKaryawanData();
+        fetchMomHistory(); // Load daftar dropdown history meeting
+        updateAccessControl();
+    };
 
-        try {
-            JsBarcode("#barcode", "DRAFT-BELUM-DISIMPAN", {
-                height: 35,
-                displayValue: true,
-                fontSize: 12,
-                margin: 0
-            });
-        } catch(e) { console.log("Barcode library loading..."); }
-    });
+    // --- FITUR LOGIN & AKSES KONTROL ---
+    function toggleLogin() {
+        const userSelect = document.getElementById('loginUser').value;
+        const passInput = document.getElementById('loginPassword');
+        const btnLogin = document.getElementById('btnLogin');
 
-    async function fetchKaryawanInit() {
-        try {
-            const response = await fetch(WEB_APP_URL + "?action=getKaryawan");
-            const rawData = await response.json();
-            
-            if(rawData.error) throw new Error(rawData.error);
-
-            normalizedData = rawData.map(emp => {
-                const keys = Object.keys(emp);
-                const keyNama = keys.find(k => k.toLowerCase().includes('nama')) || "";
-                const keyNik = keys.find(k => k.toLowerCase().includes('nik') || k.toLowerCase().includes('id')) || "";
-                const keyRole = keys.find(k => k.toLowerCase().includes('role') || k.toLowerCase().includes('jabatan')) || "";
-                
-                return {
-                    nama: keyNama ? String(emp[keyNama]).trim() : "",
-                    nik: keyNik ? String(emp[keyNik]).trim() : "",
-                    role: keyRole ? emp[keyRole] : ""
-                };
-            }).filter(emp => emp.nama !== "");
-
-            let selectLogin = document.getElementById('loginNama');
-            selectLogin.innerHTML = '<option value="">-- Pilih Nama --</option>';
-            normalizedData.forEach(emp => {
-                optionsHTML += `<option value="${emp.nama}">${emp.nama}</option>`;
-                selectLogin.innerHTML += `<option value="${emp.nama}">${emp.nama}</option>`;
-            });
-
-            selectLogin.disabled = false;
-            document.getElementById('btnLoginBtn').disabled = false;
-            document.getElementById('btnLoginBtn').innerText = "Masuk Sistem";
-
-        } catch (err) {
-            console.error(err);
-            document.getElementById('loginNama').innerHTML = "<option>Gagal memuat koneksi jaringan</option>";
-        }
-    }
-
-    function prosesLogin() {
-        let nama = document.getElementById('loginNama').value;
-        let pass = document.getElementById('loginPass').value.trim();
-        
-        if(!nama) return alert("Silakan pilih nama karyawan!");
-        
-        let emp = normalizedData.find(e => e.nama === nama);
-        if(!emp) return alert("User tidak ditemukan.");
-        
-        if(pass !== emp.nik) {
-            return alert("Kata sandi salah! Gunakan ID Karyawan Anda.");
-        }
-
-        currentUser = emp;
-        document.getElementById('loginScreen').style.display = 'none';
-
-        if (ADMIN_USERS.includes(currentUser.nama)) {
-            showAdmin();
-            // Hanya nambah baris jika tabel benar-benar kosong (awal login)
-            if(document.getElementById('tableData').children.length === 0) {
-                tambahBaris(); tambahBaris(); 
+        if (!isLoggedIn) {
+            if (userSelect === "Aspuro Amarulloh Khoiri" && passInput.value === "020109") {
+                isLoggedIn = true;
+                passInput.value = "";
+                passInput.style.display = "none";
+                document.getElementById('loginUser').disabled = true;
+                btnLogin.innerText = "Keluar";
+                btnLogin.style.background = "#ef4444";
+                btnLogin.style.color = "white";
+                alert("Login Berhasil! Akses editor dibuka.");
+            } else {
+                alert("Kata sandi salah. Akses ditolak.");
             }
         } else {
-            showRekapan();
+            isLoggedIn = false;
+            passInput.style.display = "inline-block";
+            document.getElementById('loginUser').disabled = false;
+            btnLogin.innerText = "Masuk";
+            btnLogin.style.background = "";
+            btnLogin.style.color = "";
+            alert("Anda telah keluar dari mode editor.");
         }
+        updateAccessControl();
     }
 
-    // Navigasi untuk menampilkan mode Admin
-    function showAdmin() {
-        document.getElementById('rekapanScreen').style.display = 'none';
-        document.getElementById('adminScreen').style.display = 'flex';
-    }
+    function updateAccessControl() {
+        const mainInputs = document.querySelectorAll('.grid-2 input, .grid-2 select');
+        mainInputs.forEach(input => input.disabled = !isLoggedIn);
 
-    // Navigasi untuk menampilkan mode Rekapan
-    function showRekapan() {
-        document.getElementById('adminScreen').style.display = 'none';
-        document.getElementById('rekapanScreen').style.display = 'block';
-        document.getElementById('rekapanInfo').innerText = `Nama: ${currentUser.nama} | ID: ${currentUser.nik}`;
-        
-        // Tampilkan tombol "Ke Mode Admin" hanya untuk admin
-        if (ADMIN_USERS.includes(currentUser.nama)) {
-            document.getElementById('btnToAdminPanel').style.display = 'inline-block';
+        const tableInputs = document.querySelectorAll('table input, table select');
+        tableInputs.forEach(input => input.disabled = !isLoggedIn);
+
+        const btnAddHadir = document.getElementById('btnAddHadir');
+        const btnAddBahas = document.getElementById('btnAddBahas');
+        const btnSave = document.getElementById('btnSave');
+        const removeButtons = document.querySelectorAll('.btn-remove-col');
+
+        if (isLoggedIn) {
+            btnAddHadir.style.display = "inline-flex";
+            btnAddBahas.style.display = "inline-flex";
+            btnSave.style.display = "inline-flex";
+            removeButtons.forEach(col => col.style.display = "table-cell");
         } else {
-            document.getElementById('btnToAdminPanel').style.display = 'none';
+            btnAddHadir.style.display = "none";
+            btnAddBahas.style.display = "none";
+            btnSave.style.display = "none";
+            removeButtons.forEach(col => col.style.display = "none");
         }
 
-        loadRekapanUser(currentUser.nik);
-    }
-
-    function logout() {
-        currentUser = null;
-        document.getElementById('adminScreen').style.display = 'none';
-        document.getElementById('rekapanScreen').style.display = 'none';
-        document.getElementById('loginScreen').style.display = 'block';
-        document.getElementById('loginPass').value = '';
-        document.getElementById('tableData').innerHTML = ''; 
-    }
-
-    function formatDateFromISO(isoString) {
-        try {
-            let d = new Date(isoString);
-            const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-            const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-            return `${days[d.getDay()]}, ${String(d.getDate()).padStart(2,'0')}/${months[d.getMonth()]}/${String(d.getFullYear()).slice(-2)}`;
-        } catch(e) {
-            return isoString;
-        }
-    }
-
-    async function loadRekapanUser(nik) {
-        let tbody = document.getElementById('rekapanBody');
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Mengambil data rekapan Anda dari server... ⏳</td></tr>';
-        
-        try {
-            const res = await fetch(WEB_APP_URL + "?action=getRekapan&nik=" + encodeURIComponent(nik));
-            const textData = await res.text();
-            
-            let data;
-            try {
-                data = JSON.parse(textData);
-            } catch (err) {
-                throw new Error("Sistem Server belum merespons format yang benar.");
-            }
-            
-            if (data.error) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Tidak ada riwayat lembur ditemukan.</td></tr>`;
-                return;
-            }
-
-            if(!Array.isArray(data) || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Anda belum memiliki riwayat lembur.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = '';
-            data.forEach((item, index) => {
-                // PERBAIKAN: Pastikan item.tanggal tidak undefined sebelum dicek includes('T')
-                let strTanggal = item.tanggal ? String(item.tanggal) : "-";
-                let finalTgl = strTanggal.includes('T') ? formatDateFromISO(strTanggal) : strTanggal;
-                
-                // PERBAIKAN: Jika tugas/waktu kosong dari spreadsheet, ubah jadi "-" agar tidak error
-                let strTugas = item.tugas ? item.tugas : "-";
-                let strWaktu = item.waktu ? item.waktu : "-";
-                
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${index + 1}</td>
-                        <td>${finalTgl}</td>
-                        <td>${strTugas}</td>
-                        <td>${strWaktu}</td>
-                    </tr>
-                `;
-            });
-
-        } catch (error) {
-            console.error("Fetch Error:", error);
-            tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color:red;">Gagal memuat data. Pesan: ${error.message}</td></tr>`;
-        }
-    }
-    function markUnsaved() {
-        isSaved = false;
-        let btnPrint = document.getElementById('btnPrint');
-        btnPrint.disabled = true;
-        btnPrint.title = "Simpan data terlebih dahulu untuk mencetak";
-        btnPrint.innerHTML = "🖨️ Cetak Dokumen (Belum Disimpan)";
-        
-        JsBarcode("#barcode", "DRAFT-BELUM-DISIMPAN", { height: 35, displayValue: true, fontSize: 11, margin: 0 });
-    }
-
-    function markSaved(idLembur) {
-        isSaved = true;
-        let btnPrint = document.getElementById('btnPrint');
-        btnPrint.disabled = false;
-        btnPrint.title = "Klik untuk mencetak dokumen";
-        btnPrint.innerHTML = "🖨️ Cetak Dokumen";
-
-        JsBarcode("#barcode", idLembur, { height: 35, displayValue: true, fontSize: 12, margin: 0 });
-    }
-
-    function prosesTanggalFormat(el) {
-        if (el.value) {
-            el.dataset.rawDate = el.value; 
-            el.type = 'text';
-            el.value = formatTanggalIndo(el.dataset.rawDate);
+        const modeBadge = document.getElementById('displayModeBadge');
+        if (isLoggedIn) {
+            modeBadge.innerText = "Mode: Editor Aktif (Aspuro)";
+            modeBadge.style.background = "rgba(34, 197, 94, 0.1)";
+            modeBadge.style.color = "#16a34a";
+            modeBadge.style.borderColor = "rgba(34, 197, 94, 0.2)";
         } else {
-            el.type = 'text';
-            el.value = "";
-            el.dataset.rawDate = "";
+            modeBadge.innerText = "Mode: Lihat & Cetak Ulang (Terkunci)";
+            modeBadge.style.background = "rgba(239, 68, 68, 0.1)";
+            modeBadge.style.color = "#dc2626";
+            modeBadge.style.borderColor = "rgba(239, 68, 68, 0.2)";
         }
     }
 
-    function formatTanggalIndo(dateStr) {
-        if(!dateStr) return "";
-        const days = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-        const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Ags','Sep','Okt','Nov','Des'];
-        
-        let d = new Date(dateStr);
-        let dayName = days[d.getDay()];
-        let dd = String(d.getDate()).padStart(2, '0');
-        let mmm = months[d.getMonth()];
-        let yy = String(d.getFullYear()).slice(-2);
-        
-        return `${dayName}, ${dd}/${mmm}/${yy}`;
+    // --- FITUR KARYAWAN & TABEL ---
+    function fetchKaryawanData() {
+        if(SCRIPT_URL === 'MASUKKAN_URL_WEB_APP_ANDA_DISINI') return;
+        fetch(SCRIPT_URL + "?action=getKaryawan")
+        .then(res => res.json())
+        .then(res => {
+            if(res.status === 'success') {
+                dataKaryawanGlobal = res.data;
+                const dataList = document.getElementById('listKaryawan');
+                res.data.forEach(kary => {
+                    const option = document.createElement('option');
+                    option.value = kary.nama;
+                    dataList.appendChild(option);
+                });
+                document.getElementById('karyawanStatus').style.display = 'inline-block';
+            }
+        })
+        .catch(err => console.log("Gagal memuat data karyawan"));
     }
 
-    function tambahBaris() {
-        const tbody = document.getElementById('tableData');
+    function autoFillJabatan(inputElem) {
+        const namaInput = inputElem.value;
+        const baris = inputElem.closest('tr');
+        const inputJabatan = baris.querySelector('.hadir-jabatan');
+        const karyawanFound = dataKaryawanGlobal.find(k => k.nama === namaInput);
+        if (karyawanFound) { inputJabatan.value = karyawanFound.jabatan; } 
+    }
+
+    function addHadirRow() {
+        if(!isLoggedIn) return;
+        const tbody = document.getElementById('bodyHadir');
         const tr = document.createElement('tr');
-        
         tr.innerHTML = `
-            <td class="row-number font-medium"></td>
-            <td><input type="text" class="nik-input" readonly placeholder="Otomatis"></td>
-            <td><input type="text" class="role-input" readonly placeholder="Otomatis"></td>
-            <td>
-                <select class="nama-input" onchange="onNamaChange(this); markUnsaved();">
-                    ${optionsHTML}
-                </select>
-            </td>
-            <td><input type="text" class="tugas-input" placeholder="Ketik tugas..." oninput="markUnsaved()"></td>
-            <td>
-                <input list="jam-lembur-options" class="waktu-jam" placeholder="Pilih/Ketik Jam..." style="text-align:center;" oninput="markUnsaved()">
-            </td>
-            <td class="sign-col"></td>
-            <td class="action-col">
-                <button class="btn-delete" onclick="hapusBaris(this)" title="Hapus">✕</button>
-            </td>
+            <td><input type="text" class="hadir-nama" list="listKaryawan" oninput="autoFillJabatan(this)" placeholder="Ketik nama..."></td>
+            <td><input type="text" class="hadir-jabatan" placeholder="Jabatan terisi otomatis..."></td>
+            <td class="btn-remove-col"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
         `;
         tbody.appendChild(tr);
-        recalculateRows();
-        markUnsaved();
+        updateAccessControl();
     }
 
-    function hapusBaris(btn) {
-        const tbody = document.getElementById('tableData');
-        if(tbody.children.length === 1) {
-            alert("Minimal harus ada 1 baris karyawan!");
-            return;
-        }
-        btn.closest('tr').remove();
-        recalculateRows();
-        markUnsaved();
+    function addBahasRow() {
+        if(!isLoggedIn) return;
+        const tbody = document.getElementById('bodyBahas');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="bahas-point" placeholder="Topik..."></td>
+            <td><input type="text" class="bahas-keputusan" placeholder="Keputusan disepakati..."></td>
+            <td><input type="text" class="bahas-tugas" placeholder="Tindakan lanjutan..."></td>
+            <td><input type="text" class="bahas-pic" list="listKaryawan" placeholder="Nama PIC"></td>
+            <td class="btn-remove-col"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+        `;
+        tbody.appendChild(tr);
+        updateAccessControl();
     }
 
-    function recalculateRows() {
-        const baris = document.querySelectorAll('#tableData tr');
-        baris.forEach((tr, index) => {
-            let num = index + 1;
-            tr.querySelector('.row-number').innerText = num;
-            
-            let tdSign = tr.querySelector('.sign-col');
-            tdSign.innerHTML = `<div style="text-align: left; font-weight:600; padding-left:5px;">${num}.</div>`;
+    function removeRow(btn) { 
+        if(!isLoggedIn) return;
+        btn.closest('tr').remove(); 
+    }
+
+    // --- FITUR SIMPAN & CETAK ULANG ---
+    function getFormData() {
+        const waktuStart = document.getElementById('waktuMulai').value;
+        const waktuEnd = document.getElementById('waktuSelesai').value;
+        const waktuGabungan = (waktuStart || waktuEnd) ? `${waktuStart} s.d ${waktuEnd}` : '';
+
+        const data = {
+            idRapat: document.getElementById('idRapat').value,
+            judulRapat: document.getElementById('judulRapat').value,
+            tanggal: document.getElementById('tanggal').value,
+            waktu: waktuGabungan,
+            tempat: document.getElementById('tempat').value,
+            pimpinan: document.getElementById('pimpinan').value,
+            notulen: document.getElementById('notulen').value,
+            kehadiran: [], pembahasan: []
+        };
+        
+        document.querySelectorAll('#bodyHadir tr').forEach(tr => {
+            data.kehadiran.push({ nama: tr.querySelector('.hadir-nama').value, jabatan: tr.querySelector('.hadir-jabatan').value });
+        });
+        document.querySelectorAll('#bodyBahas tr').forEach(tr => {
+            data.pembahasan.push({ point: tr.querySelector('.bahas-point').value, keputusan: tr.querySelector('.bahas-keputusan').value, dummy: '', tugas: tr.querySelector('.bahas-tugas').value, pic: tr.querySelector('.bahas-pic').value });
+        });
+        return data;
+    }
+
+    function saveData() {
+        if(!isLoggedIn) return alert("Akses ditolak. Anda harus login sebagai editor.");
+        const btn = document.getElementById('btnSave'); const loader = document.getElementById('saveLoader');
+        const data = getFormData();
+        if(!data.judulRapat) { alert("Judul Rapat wajib diisi!"); return; }
+
+        btn.disabled = true; loader.style.display = 'inline-block';
+        fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(data) })
+        .then(response => response.json())
+        .then(result => {
+            alert(result.message); btn.disabled = false; loader.style.display = 'none';
+            fetchMomHistory(); // Refresh dropdown history otomatis
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Terjadi kesalahan koneksi."); btn.disabled = false; loader.style.display = 'none';
         });
     }
 
-    function onNamaChange(selectElem) {
-        let namaDipilih = selectElem.value;
-        let emp = normalizedData.find(e => e.nama === namaDipilih);
-        let tr = selectElem.closest('tr');
-        
-        if(emp) {
-            tr.querySelector('.nik-input').value = emp.nik;
-            tr.querySelector('.role-input').value = emp.role;
-        } else {
-            tr.querySelector('.nik-input').value = "";
-            tr.querySelector('.role-input').value = "";
-        }
-    }
-
-    async function simpanLemburan() {
-        const btnSave = document.getElementById('btnSave');
-        const displayTgl = document.getElementById('inpTanggal').value; 
-        
-        if (!displayTgl) {
-            alert("Harap isi Tanggal Lembur!");
-            return;
-        }
-
-        let payload = {
-            perihal: document.getElementById('inpPerihal').value,
-            tanggal: displayTgl, 
-            kepada: document.getElementById('inpKepada').value,
-            details: []
-        };
-
-        const baris = document.querySelectorAll('#tableData tr');
-        baris.forEach((tr, index) => {
-            let nama = tr.querySelector('.nama-input').value;
-            if (nama.trim() !== "") {
-                payload.details.push({
-                    no: index + 1,
-                    nik: tr.querySelector('.nik-input').value,
-                    role: tr.querySelector('.role-input').value,
-                    nama: nama,
-                    tugas: tr.querySelector('.tugas-input').value,
-                    waktu: tr.querySelector('.waktu-jam').value
+    // Fetch Daftar Riwayat Rapat (Terbaru Di Atas) ke Dropdown
+    function fetchMomHistory() {
+        if(SCRIPT_URL === 'MASUKKAN_URL_WEB_APP_ANDA_DISINI') return;
+        fetch(SCRIPT_URL + "?action=getHistory")
+        .then(res => res.json())
+        .then(res => {
+            const select = document.getElementById('reprintId');
+            select.innerHTML = '<option value="">-- Pilih ID Rapat yang Tersedia --</option>';
+            
+            if(res.status === 'success' && res.data && res.data.length > 0) {
+                const sortedData = res.data.reverse(); 
+                sortedData.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = item.idRapat;
+                    opt.text = `${item.idRapat} | ${item.judulRapat} (${item.tanggal})`;
+                    select.appendChild(opt);
                 });
             }
+            select.innerHTML += '<option value="MANUAL">+ Ketik ID Manual...</option>';
+        })
+        .catch(err => {
+            const select = document.getElementById('reprintId');
+            select.innerHTML = '<option value="">Gagal memuat list server.</option>';
+            select.innerHTML += '<option value="MANUAL">+ Ketik ID Manual...</option>';
         });
+    }
 
-        if (payload.details.length === 0) {
-            alert("Pilih minimal 1 karyawan sebelum menyimpan!");
-            return;
+    function fetchReprintData() {
+        let id = document.getElementById('reprintId').value.trim();
+        
+        if(id === "MANUAL") {
+            id = prompt("Masukkan ID Rapat Manual (Misal: MOM-123456):");
+            if(!id) return;
         }
 
-        btnSave.innerHTML = "⏳ Menyimpan...";
-        btnSave.disabled = true;
+        if(!id) return alert("Pilih atau masukkan ID Rapat terlebih dahulu!");
+        
+        const loader = document.getElementById('reprintLoader'); 
+        loader.style.display = 'inline-block';
 
-        try {
-            const res = await fetch(WEB_APP_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'text/plain' },
-                body: JSON.stringify(payload)
-            });
-            const response = await res.json();
+        fetch(SCRIPT_URL + "?id=" + id)
+        .then(res => res.json())
+        .then(res => {
+            loader.style.display = 'none';
+            if(res.status === 'not_found') return alert("ID Rapat tidak ditemukan di database.");
             
-            if (response.status === 'success') {
-                alert("Berhasil! Data lembur tersimpan.");
-                markSaved(response.id); 
+            document.getElementById('idRapat').value = res.mom.idRapat;
+            document.getElementById('displayId').innerText = "ID: " + res.mom.idRapat;
+            document.getElementById('header-title').setAttribute('data-print-id', res.mom.idRapat);
+            document.getElementById('judulRapat').value = res.mom.judulRapat;
+            document.getElementById('tanggal').value = res.mom.tanggal;
+            
+            const dbWaktu = res.mom.waktu || '';
+            if(dbWaktu.includes(' s.d ')) {
+                const w = dbWaktu.split(' s.d ');
+                document.getElementById('waktuMulai').value = w[0];
+                document.getElementById('waktuSelesai').value = w[1];
             } else {
-                alert("Error Server: " + response.message);
+                document.getElementById('waktuMulai').value = dbWaktu;
+                document.getElementById('waktuSelesai').value = '';
             }
-        } catch (error) {
-            alert("Gagal koneksi ke server.");
-        }
 
-        btnSave.innerHTML = "💾 Simpan Data";
-        btnSave.disabled = false;
+            document.getElementById('tempat').value = res.mom.tempat;
+            document.getElementById('pimpinan').value = res.mom.pimpinan;
+            document.getElementById('notulen').value = res.mom.notulen;
+
+            const tBodyHadir = document.getElementById('bodyHadir'); tBodyHadir.innerHTML = '';
+            res.kehadiran.forEach(h => {
+                tBodyHadir.innerHTML += `<tr>
+                    <td><input type="text" class="hadir-nama" list="listKaryawan" oninput="autoFillJabatan(this)" value="${h.nama}"></td>
+                    <td><input type="text" class="hadir-jabatan" value="${h.jabatan}"></td>
+                    <td class="btn-remove-col"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+                </tr>`;
+            });
+
+            const tBodyBahas = document.getElementById('bodyBahas'); tBodyBahas.innerHTML = '';
+            res.pembahasan.forEach(p => {
+                tBodyBahas.innerHTML += `<tr>
+                    <td><input type="text" class="bahas-point" value="${p.point}"></td>
+                    <td><input type="text" class="bahas-keputusan" value="${p.keputusan}"></td>
+                    <td><input type="text" class="bahas-tugas" value="${p.tugas}"></td>
+                    <td><input type="text" class="bahas-pic" list="listKaryawan" value="${p.pic}"></td>
+                    <td class="btn-remove-col"><button class="btn-remove" onclick="removeRow(this)">✕</button></td>
+                </tr>`;
+            });
+            
+            updateAccessControl();
+            alert("Data MOM berhasil dimuat dan siap dicetak!");
+        }).catch(err => { loader.style.display = 'none'; alert("Gagal menarik data. Periksa jaringan Anda."); });
+    }
+
+    function prepareAndPrint() {
+        const idRapat = document.getElementById('idRapat').value;
+        
+        const now = new Date();
+        const strTime = now.toLocaleDateString('id-ID', {day: '2-digit', month: 'short', year: 'numeric'}) + ' - ' + 
+                        now.toLocaleTimeString('id-ID', {hour: '2-digit', minute: '2-digit'});
+        document.getElementById('printTimestamp').innerText = "Waktu Cetak: " + strTime;
+
+        JsBarcode("#barcode", idRapat, { format: "CODE128", lineColor: "#000", width: 2, height: 40, displayValue: true, fontSize: 11 });
+        document.getElementById("qrcode").innerHTML = ""; 
+        new QRCode(document.getElementById("qrcode"), {
+            text: "https://murindasentrabaja.github.io/Minutes-Of-Meeting-MOM-/" + idRapat, 
+            width: 65, height: 65, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.L
+        });
+        
+        setTimeout(() => { window.print(); }, 400);
     }
 </script>
 </body>
