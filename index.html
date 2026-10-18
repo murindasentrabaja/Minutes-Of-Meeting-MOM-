@@ -45,16 +45,16 @@ body[data-tab=form] #repPane{display:none}body[data-tab=rep] #formPane{display:n
 #report{width:794px;margin:auto;background:#fff;padding:34px 40px;color:#1b2540;font-size:12px;line-height:1.55;box-shadow:0 6px 30px rgba(0,0,0,.12)}
 .rh{display:flex;align-items:center;gap:20px;padding-bottom:12px;border-bottom:4px solid var(--b);position:relative}
 .rh:after{content:"";position:absolute;left:0;bottom:-8px;width:90px;height:4px;background:var(--r)}
-.rh img{height:54px}.rh div{margin-left:auto;text-align:right}.rh h1{font-size:21px;color:var(--b);letter-spacing:1px;font-weight:800}.rh p{color:var(--m);font-size:11px}.rh b{font-size:11.5px}
+.rh>img{height:54px}.rh div{margin-left:auto;text-align:right}.rh h1{font-size:21px;color:var(--b);letter-spacing:1px;font-weight:800}.rh p{color:var(--m);font-size:11px}.rh b{font-size:11.5px}
 .ttl{margin:22px 0 12px;font-size:16px;font-weight:700;text-align:center;padding:9px;background:#eef4fd;border-left:5px solid var(--b);border-radius:6px}
 table.i{width:100%;border-collapse:collapse;margin-bottom:6px}table.i td{padding:4px 8px;vertical-align:top;border-bottom:1px solid #edf1f8}table.i td:nth-child(odd){width:17%;color:var(--m);font-weight:600}
 #report h3{margin:18px 0 8px;font-size:13px;color:#fff;background:var(--b);padding:5px 10px;border-radius:5px;break-after:avoid}#report h3 small{font-weight:400;opacity:.9;margin-left:8px}
 table.d{width:100%;border-collapse:collapse}table.d th{background:#e7eefb;color:var(--b);text-align:left;padding:6px 8px;font-size:11px}table.d td{padding:5px 8px;border-bottom:1px solid #e3e9f4;vertical-align:top}table.d tr:nth-child(even) td{background:#f8faff}
 .it{margin-bottom:12px;break-inside:avoid-page}.ih{display:flex;gap:8px;align-items:center;font-weight:700;font-size:12.5px;padding:4px 0;border-bottom:1.5px solid var(--b)}.ih>span{background:var(--r);color:#fff;border-radius:50%;width:21px;height:21px;display:grid;place-items:center;font-size:11px}.ih em{margin-left:auto;font-weight:500;color:var(--m);font-style:normal;font-size:11px}
 .pt{display:flex;gap:9px;padding:3px 0 0 4px;break-inside:avoid;text-align:justify}.pt b{color:var(--b);min-width:30px}
-.sig{display:flex;justify-content:space-around;margin-top:34px;text-align:center;break-inside:avoid}.sig div{width:40%}.sig i{display:block;height:64px;border-bottom:1px solid #1b2540;margin-bottom:4px}
+.sig{display:flex;justify-content:space-around;margin-top:34px;text-align:center;break-inside:avoid}.sig>div{width:40%}.sig i{display:block;height:64px;border-bottom:1px solid #1b2540;margin-bottom:4px}
 .ft{margin-top:20px;padding-top:6px;border-top:1px solid var(--l);font-size:10px;color:var(--m);display:flex;justify-content:space-between}
-.st{padding:1px 8px;border-radius:9px;font-size:10.5px;font-weight:700}.st.Hadir,.st.Selesai{background:#dff5e5;color:#1b7a3a}.st.Izin,.st.Progress{background:#fff1d1;color:#a46a00}.st.Tidak,.st.Open{background:#fde0e0;color:#b71c1c}
+.st{padding:1px 8px;border-radius:9px;font-size:10.5px;font-weight:700;white-space:nowrap}.st.Hadir,.st.Selesai{background:#dff5e5;color:#1b7a3a}.st.Izin,.st.Progress{background:#fff1d1;color:#a46a00}.st.Tidak,.st.Open{background:#fde0e0;color:#b71c1c}
 @media(max-width:960px){.app{grid-template-columns:1fr;padding:12px}.side{position:static;height:auto;max-height:240px}.g .w2{grid-column:auto}}
 @media print{@page{size:A4;margin:11mm}.bar,.side,.tabs,#formPane,.toast{display:none!important}body{background:#fff}.app{display:block;padding:0}#repPane{display:block!important;background:none;border:0;box-shadow:none;padding:0;overflow:visible}#report{box-shadow:none;margin:0;width:100%;padding:0}tr,.sig{break-inside:avoid}}
 
@@ -66,8 +66,8 @@ table.d{width:100%;border-collapse:collapse}table.d th{background:#e7eefb;color:
 #ac div{padding:8px 12px;cursor:pointer;border-bottom:1px solid #f0f3f9}#ac div.on,#ac div:hover{background:#eaf2ff}#ac small{display:block;color:var(--m);font-size:11px}
 .locked input,.locked select,.locked textarea,.locked [data-add],.locked .x,.locked .nb{pointer-events:none;opacity:.6}
 .bdg{padding:2px 9px;border-radius:12px;font-size:10.5px;font-weight:700;background:#dff5e5;color:#1b7a3a}.bdg.w{background:#fff1d1;color:#a46a00}
-.bc{display:block;margin:4px 0 0 auto;width:170px;height:16px}
-.sig img.qr{width:112px;height:144px;display:block;margin:8px auto 6px}.ph{width:112px;height:144px;margin:8px auto 6px;border:1.5px dashed #b9c8e4;border-radius:11px;display:grid;place-items:center;padding:12px;color:var(--m);font-size:10.5px;text-align:center;line-height:1.4}
+.bc{display:block;margin:5px 0 0 auto;width:200px;height:20px}
+.sig img.qr{width:100px;height:100px;display:block;margin:6px auto 2px}.sig .ph{width:100px;height:100px;margin:6px auto 2px;border:1.5px dashed #b9c8e4;border-radius:11px;display:grid;place-items:center;padding:8px;color:var(--m);font-size:10px;text-align:center;line-height:1.4}.sig .au{margin:0 0 6px;font-size:9px;line-height:1.35;color:var(--m);font-weight:600;letter-spacing:.3px;text-transform:uppercase}.sig .au b{display:block;font:700 10.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.9px;color:var(--t);text-transform:none}
 </style>
 </head>
 <body data-tab="form">
@@ -2518,10 +2518,59 @@ async function save() {
   catch (x) { toast(x.message, 1); }
   b.disabled = false; b.textContent = '💾 Simpan';
 }
+/* ===== Export PDF — A4 portrait, margin seragam, baris/blok tidak terpotong antar halaman ===== */
+const PDF_M = [12, 10.5, 14, 10.5];   // margin (mm): atas, kiri, bawah, kanan
+const PDF_SC = 2;                     // skala render
+function pdfGeom() {
+  const IW = 210 - PDF_M[1] - PDF_M[3], IH = 297 - PDF_M[0] - PDF_M[2];   // area cetak (mm)
+  const W = Math.round(IW * 96 / 25.4);                                   // lebar area cetak (px, 96 dpi)
+  return {W, H:Math.floor(W * PDF_SC * (IH / IW)) / PDF_SC};              // H = tinggi 1 halaman (px) — sama dengan potongan html2pdf
+}
+function paginate(root, H) {   // dorong blok yang akan terpotong ke awal halaman berikutnya
+  const rt = () => root.getBoundingClientRect().top;
+  const Y = el => el.getBoundingClientRect().top - rt(), Bt = el => el.getBoundingClientRect().bottom - rt();
+  const list = [...root.querySelectorAll('.rh,.ttl,table.i,h3,table.d tr,.ih,.pt,.sig,.ft')];
+  const keep = el => el.matches('h3,.ih,.sig') || (el.tagName == 'TR' && el.querySelector('th'));   // harus menempel dengan elemen sesudahnya
+  list.forEach((el, i) => {
+    let j = i; while (j < list.length - 1 && j - i < 3 && keep(list[j])) j++;
+    const t = Y(el), b = Bt(list[j]), pg = Math.floor((t + 1) / H);
+    if (b <= (pg + 1) * H - 2 || t - pg * H < 2) return;   // muat di halaman ini, atau sudah di awal halaman
+    const row = el.tagName == 'TR', sp = document.createElement(row ? 'tr' : 'div');
+    if (row) sp.innerHTML = `<td colspan="${el.children.length}" style="height:0;padding:0;border:0;background:#fff"></td>`;
+    el.parentNode.insertBefore(sp, el);
+    let probe = el;
+    if (row && !el.querySelector('th')) {   // lanjutan tabel: ulangi judul kolom di halaman berikutnya
+      probe = el.parentNode.querySelector('tr').cloneNode(true); el.parentNode.insertBefore(probe, el);
+    }
+    const set = h => (row ? sp.firstChild : sp).style.height = h + 'px';
+    let h = 0; set(0);
+    for (let k = 0; k < 4; k++) { const d = (pg + 1) * H - Y(probe); if (d <= .01) break; h += Math.ceil(d); set(h); }   // baris tabel dibulatkan browser → ulangi sampai tepat
+  });
+  return root;
+}
+function pdfSource() {   // salinan laporan dengan lebar = area cetak A4, tanpa padding/bayangan, sudah dipaginasi
+  const {W, H} = pdfGeom();
+  const wrap = document.createElement('div'); wrap.style.cssText = `position:fixed;left:-10000px;top:0;width:${W}px;background:#fff`;
+  const src = $('#report').cloneNode(true); src.style.cssText = `width:${W}px;margin:0;padding:0;box-shadow:none;background:#fff`;
+  wrap.appendChild(src); document.body.appendChild(wrap);
+  return {wrap, src, W, H};
+}
 async function pdf() {
-  tab('rep'); await new Promise(r => setTimeout(r, 250)); toast('Menyiapkan PDF…');
+  tab('rep'); toast('Menyiapkan PDF…');
   const nm = 'MoM_' + (cur.nomor || cur.judul || 'baru').replace(/[^\w-]+/g, '_') + '.pdf';
-  html2pdf().set({margin:[9, 8, 11, 8], filename:nm, image:{type:'jpeg', quality:.97}, html2canvas:{scale:2, useCORS:true, scrollX:0, scrollY:0}, jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}, pagebreak:{mode:['css', 'legacy'], avoid:['tr', '.pt', '.sig', '.ih']}}).from($('#report')).save().then(() => toast('PDF berhasil dibuat ✔'));
+  const {wrap, src, W, H} = pdfSource();
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    await Promise.all([...src.querySelectorAll('img')].map(i => i.decode ? i.decode().catch(() => {}) : 0));
+    paginate(src, H);
+    await html2pdf().set({
+      margin:PDF_M, filename:nm, image:{type:'jpeg', quality:.98},
+      html2canvas:{scale:PDF_SC, useCORS:true, backgroundColor:'#ffffff', scrollX:0, scrollY:0, windowWidth:Math.max(W, document.documentElement.clientWidth)},
+      jsPDF:{unit:'mm', format:'a4', orientation:'portrait'}, pagebreak:{mode:['legacy']}
+    }).from(src).save();
+    toast('PDF berhasil dibuat ✔');
+  } catch (x) { toast('Gagal membuat PDF: ' + (x && x.message || x), 1); }
+  finally { wrap.remove(); }
 }
 function doPrint() { tab('rep'); setTimeout(() => window.print(), 250); }
 
@@ -2615,44 +2664,34 @@ document.addEventListener('keydown', e => {
   else if (e.key == 'Enter' && acI >= 0) { e.preventDefault(); acPick(it[acI].dataset.n); }
   else if (e.key == 'Escape') box.style.display = 'none';
 });
-/* ===== QR tanda tangan (kartu digital) & barcode nomor ===== */
+/* ===== QR tanda tangan (polos, tanpa kotak), nomor auth & barcode nomor ===== */
 const QC = {};
-function qrImg(link, tag, role) {
-  const k = link + '|' + tag; if (QC[k]) return QC[k];
+function qrImg(link) {   // QR polos di atas latar putih; tanpa kartu/bingkai/teks tambahan
+  if (QC[link]) return QC[link];
   const q = qrcode(0, 'M'); q.addData(link); q.make(); const n = q.getModuleCount();
-  const S = 4, cv = document.createElement('canvas'); cv.width = 112 * S; cv.height = 144 * S;
+  const Z = 100, S = 4, cv = document.createElement('canvas'); cv.width = Z * S; cv.height = Z * S;
   const x = cv.getContext('2d'); x.scale(S, S);
-  const rr = (a, b, w, h, r) => { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); };
-  const g = x.createLinearGradient(0, 0, 112, 0); g.addColorStop(0, '#0b4a9c'); g.addColorStop(1, '#c62828');
-  rr(.5, .5, 111, 143, 11); x.fillStyle = '#fff'; x.fill(); x.save(); x.clip();
-  for (let i = 0; i < 16; i++) {   // pola gelombang halus anti-edit
-    x.beginPath();
-    for (let px = 0; px <= 112; px += 2) { const py = 76 + Math.sin(px / 112 * 12.56 + i * .42) * (10 + i * 3.6); px ? x.lineTo(px, py) : x.moveTo(px, py); }
-    x.strokeStyle = i % 2 ? 'rgba(198,40,40,.10)' : 'rgba(11,74,156,.12)'; x.lineWidth = .45; x.stroke();
-  }
-  x.fillStyle = g; x.fillRect(0, 0, 112, 20);
-  x.fillStyle = '#fff'; x.textAlign = 'center'; x.font = 'bold 6.2px Arial'; x.fillText('TANDA TANGAN DIGITAL', 56, 8.6);
-  x.globalAlpha = .85; x.font = '5px Arial'; x.fillText(role, 56, 15.2); x.globalAlpha = 1;
-  x.textAlign = 'left'; x.font = '3.3px Arial'; x.fillStyle = 'rgba(11,74,156,.5)';   // microtext terikat nomor MoM
-  x.fillText((tag + ' • ASLI • ').repeat(9), 4, 139.6); x.restore();
-  x.shadowColor = 'rgba(11,74,156,.28)'; x.shadowBlur = 7 * S; x.shadowOffsetY = 1.5 * S;
-  rr(14, 25, 84, 84, 7); x.fillStyle = '#fff'; x.fill(); x.shadowColor = 'transparent'; x.shadowBlur = 0; x.shadowOffsetY = 0;
-  const ms = Math.floor(66 * S / n) / S, qs = ms * n, ox = 14 + (84 - qs) / 2, oy = 25 + (84 - qs) / 2;
+  x.fillStyle = '#fff'; x.fillRect(0, 0, Z, Z);
+  const ms = Math.floor(88 * S / n) / S, qs = ms * n, o = Math.floor((Z - qs) * S / 2) / S;
   for (let r = 0; r < n; r++) for (let c = 0; c < n; c++) if (q.isDark(r, c)) {
     const eye = (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
-    x.fillStyle = eye ? '#0b4a9c' : '#0a2a5e'; x.fillRect(ox + c * ms, oy + r * ms, ms, ms);
+    x.fillStyle = eye ? '#0b4a9c' : '#0a2a5e'; x.fillRect(o + c * ms, o + r * ms, ms, ms);
   }
-  rr(12, 114, 88, 13, 6.5); x.fillStyle = 'rgba(27,154,75,.11)'; x.fill();
-  x.beginPath(); x.arc(20, 120.5, 3.3, 0, 6.29); x.fillStyle = '#1b9a4b'; x.fill();
-  x.beginPath(); x.moveTo(18.5, 120.6); x.lineTo(19.7, 121.8); x.lineTo(21.7, 119.3); x.strokeStyle = '#fff'; x.lineWidth = .9; x.stroke();
-  x.fillStyle = '#17803f'; x.font = 'bold 5.6px Arial'; x.fillText('Verifikasi tanpa login', 26, 122.5);
-  rr(.5, .5, 111, 143, 11); x.strokeStyle = g; x.lineWidth = 1; x.stroke();
-  return QC[k] = cv.toDataURL('image/png');
+  return QC[link] = cv.toDataURL('image/png');
 }
-function sigQ(link, c, role) {
-  if (!link) return `<div class="ph">${role == 'PIMPINAN' ? 'Menunggu approval<br>Pimpinan Rapat' : 'Muncul setelah<br>MoM disimpan'}</div>`;
-  const lb = role == 'PIMPINAN' ? 'PIMPINAN RAPAT' : 'NOTULEN';
-  return `<img class="qr" alt="QR ${lb}" src="${qrImg(link, (c.nomor || '') + ' · ' + lb, lb)}">`;
+function authNo(s) {   // nomor auth 12 karakter heksadesimal (XXXX-XXXX-XXXX) — tetap sama untuk data yang sama
+  let h1 = 0xdeadbeef, h2 = 0x41c6ce57;
+  for (let i = 0; i < s.length; i++) { const ch = s.charCodeAt(i); h1 = Math.imul(h1 ^ ch, 2654435761); h2 = Math.imul(h2 ^ ch, 1597334677); }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  const v = (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16).toUpperCase().padStart(13, '0').slice(-12);
+  return v.slice(0, 4) + '-' + v.slice(4, 8) + '-' + v.slice(8);
+}
+function sigQ(link, c, role, name) {
+  if (!link) return `<div class="ph">${role == 'PIMPINAN' ? 'Menunggu approval<br>Pimpinan Rapat' : 'Muncul setelah<br>MoM disimpan'}</div><div class="au" style="visibility:hidden">No. Auth<b>0000-0000-0000</b></div>`;
+  const pim = role == 'PIMPINAN', lb = pim ? 'PIMPINAN RAPAT' : 'NOTULEN';
+  const no = authNo([c.id, c.nomor, role, name, pim ? c.approvedAt : c.tanggal].join('|'));
+  return `<img class="qr" alt="QR ${lb}" src="${qrImg(link)}"><div class="au">No. Auth<b>${no}</b></div>`;
 }
 function bcImg(t) {
   if (!t) return '';
