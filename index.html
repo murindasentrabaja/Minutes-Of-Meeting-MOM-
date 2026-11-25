@@ -68,6 +68,26 @@ table.d{width:100%;border-collapse:collapse}table.d th{background:#e7eefb;color:
 .bdg{padding:2px 9px;border-radius:12px;font-size:10.5px;font-weight:700;background:#dff5e5;color:#1b7a3a}.bdg.w{background:#fff1d1;color:#a46a00}
 .bc{display:block;margin:5px 0 0 auto;width:200px;height:20px}
 .sig img.qr{width:100px;height:100px;display:block;margin:6px auto 2px}.sig .ph{width:100px;height:100px;margin:6px auto 2px;border:1.5px dashed #b9c8e4;border-radius:11px;display:grid;place-items:center;padding:8px;color:var(--m);font-size:10px;text-align:center;line-height:1.4}.sig .au{margin:0 0 6px;font-size:9px;line-height:1.35;color:var(--m);font-weight:600;letter-spacing:.3px;text-transform:uppercase}.sig .au b{display:block;font:700 10.5px/1.35 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.9px;color:var(--t);text-transform:none}
+
+/* ===== Print form kosong (tulis tangan) ===== */
+#pbOut{display:none;font-size:12px;line-height:1.55;color:#1b2540}
+#pbOut h3{margin:18px 0 8px;font-size:13px;color:#fff;background:var(--b);padding:5px 10px;border-radius:5px;break-after:avoid}#pbOut h3 small{font-weight:400;opacity:.9;margin-left:8px}
+#pbOut .ttl{display:flex;align-items:flex-end;gap:10px;height:13mm;text-align:left;font-size:11.5px}
+#pbOut .fl{flex:1;align-self:flex-end;height:6mm;border-bottom:1px dotted #7d8cab}
+#pbOut .hh{color:#9aa7c2;white-space:nowrap;letter-spacing:.4px}
+#pbOut table.i td{height:9mm;vertical-align:bottom}#pbOut table.i td:nth-child(even){border-bottom:1px dotted #7d8cab}
+#pbOut table.d{table-layout:fixed;border:1px solid #9fb0cf}#pbOut table.d th,#pbOut table.d td{border:1px solid #9fb0cf;padding:2px 6px;vertical-align:middle}#pbOut table.d td{height:9.5mm;background:#fff}
+#pbOut .cb{display:inline-flex;align-items:center;gap:3px;margin-right:6px;font-size:9.5px;white-space:nowrap}#pbOut .cb i{width:10px;height:10px;border:1.3px solid #1b2540;border-radius:2px}
+#pbOut .ih{height:9mm}#pbOut .ih small{font-size:10.5px;font-weight:600;color:var(--m)}#pbOut .ih em{display:flex;align-items:flex-end;gap:5px;width:150px;height:100%}
+#pbOut .pt.bl{height:8mm;align-items:flex-end;padding:0 0 0 4px}#pbOut .bl .fl{align-self:stretch;height:auto}
+#pbOut .sig i{height:70px}
+.pbp{break-after:page}.pbp:last-child{break-after:auto}
+#pbDlg{position:fixed;inset:0;z-index:120;display:none;place-items:center;background:rgba(20,33,61,.38);backdrop-filter:blur(3px)}
+#pbDlg .box{width:min(460px,94vw);max-height:92vh;overflow:auto;padding:22px;background:#fff;border-radius:20px;box-shadow:0 20px 60px rgba(11,74,156,.28)}
+#pbDlg .g{grid-template-columns:1fr 1fr;margin:12px 0}
+#pbDlg .ck{display:flex;gap:8px;align-items:center;margin:8px 0;text-transform:none;letter-spacing:0;font-weight:500;font-size:13px;color:var(--t)}#pbDlg .ck input{width:auto}
+#pbDlg .ra{display:flex;gap:8px;justify-content:flex-end;margin-top:16px}
+@media print{#pbDlg{display:none!important}body.pb .app,body.pb .bar{display:none!important}body.pb #pbOut{display:block}}
 </style>
 </head>
 <body data-tab="form">
@@ -83,6 +103,7 @@ table.d{width:100%;border-collapse:collapse}table.d th{background:#e7eefb;color:
   <button class="pri" id="bApp" style="display:none" onclick="approve()">✅ Approve</button>
   <button class="pri" id="bSave" onclick="save()">💾 Simpan</button>
   <button class="red" onclick="pdf()">⬇ Export PDF</button>
+  <button onclick="pbOpen()">📃 Print Form Kosong</button>
   <button onclick="doPrint()">🖨 Print</button>
   <button onclick="logout()">⎋ Keluar</button>
 </header>
@@ -120,6 +141,21 @@ table.d{width:100%;border-collapse:collapse}table.d th{background:#e7eefb;color:
     <div class="pane" id="repPane"><div id="report"></div></div>
   </section>
 </main>
+<div id="pbDlg" onclick="if(event.target===this)pbClose()"><div class="box">
+  <h3 style="color:var(--b);font-size:16px">📃 Print Form Kosong</h3>
+  <p class="hint" style="margin:4px 0 0">Kolom dan urutan isian sama dengan menu Isi MoM, jadi tulisan tangan tinggal disalin ke aplikasi.</p>
+  <label class="ck" style="margin-top:14px"><input type="checkbox" id="pb-h" checked> Daftar Hadir (centang kehadiran + tanda tangan)</label>
+  <label class="ck"><input type="checkbox" id="pb-m" checked> MoM (Pembahasan, Tindak Lanjut, Tanda Tangan)</label>
+  <div class="g">
+    <div><label>Baris peserta</label><input type="number" id="pb-np" value="18" min="1" max="60"></div>
+    <div><label>Topik pembahasan</label><input type="number" id="pb-nt" value="3" min="1" max="10"></div>
+    <div><label>Baris poin / topik</label><input type="number" id="pb-nk" value="5" min="1" max="15"></div>
+    <div><label>Baris tindak lanjut</label><input type="number" id="pb-na" value="5" min="0" max="20"></div>
+  </div>
+  <label class="ck"><input type="checkbox" id="pb-ps"> Cetak nama dari Daftar Peserta (tinggal centang)</label>
+  <div class="ra"><button onclick="pbClose()">Batal</button><button class="pri" onclick="pbPrint()">🖨 Print</button></div>
+</div></div>
+<div id="pbOut"></div>
 <div class="toast" id="toast"></div>
 <script>//---------------------------------------------------------------------
 //
@@ -2697,6 +2733,41 @@ function bcImg(t) {
   if (!t) return '';
   try { const cv = document.createElement('canvas'); JsBarcode(cv, t, {format:'CODE128', height:40, width:2, margin:0, displayValue:false}); return `<img class="bc" alt="Barcode" src="${cv.toDataURL()}">`; }
   catch (e) { return ''; }
+}
+/* ===== Print form kosong: Daftar Hadir & MoM untuk ditulis tangan (kolom & urutan sama dengan menu Isi MoM) ===== */
+const pbN = (id, min, max) => Math.min(max, Math.max(min, parseInt($(id).value, 10) || min));
+function pbOpen() { $('#pbDlg').style.display = 'grid'; $('#pb-ps').disabled = !PS.length; if (!PS.length) $('#pb-ps').checked = false; }
+function pbClose() { $('#pbDlg').style.display = 'none'; }
+document.addEventListener('keydown', e => { if (e.key == 'Escape') pbClose(); });
+const pbCb = (...t) => t.map(x => `<span class="cb"><i></i>${x}</span>`).join('');
+const pbHead = (h1, sub) => `<div class="rh"><img src="${LOGO}" alt="MSB"><div><h1>${h1}</h1><p>${sub} · PT Murinda Sentra Baja</p><b>No. otomatis saat disimpan</b></div></div>
+  <div class="ttl"><span>Judul / Agenda Rapat</span><i class="fl"></i></div>
+  <table class="i"><tr><td>Hari / Tanggal</td><td><span class="hh">____ / ____ / 20____</span></td><td>Pimpinan Rapat</td><td></td></tr>
+  <tr><td>Waktu</td><td><span class="hh">____ : ____ – ____ : ____ WIB</span></td><td>Notulen</td><td></td></tr>
+  <tr><td>Tempat</td><td></td><td>Status</td><td>${pbCb('Final', 'Draft')}</td></tr></table>`;
+const pbFt = () => `<div class="ft"><span>Form kosong — MSB ERP System · PT Murinda Sentra Baja</span><span>Dicetak: ${new Date().toLocaleString('id-ID')}</span></div>`;
+function pbPrint() {
+  const dh = $('#pb-h').checked, dm = $('#pb-m').checked;
+  if (!dh && !dm) return toast('Pilih minimal satu dokumen', 1);
+  const pre = $('#pb-ps').checked && PS.length, nP = Math.max(pbN('#pb-np', 1, 60), pre ? Math.min(PS.length + 2, 60) : 0);
+  const nT = pbN('#pb-nt', 1, 10), nK = pbN('#pb-nk', 1, 15), nA = pbN('#pb-na', 0, 20);
+  const L = n => Array.from({length:n}, (_, i) => i);
+  let out = '';
+  if (dh) out += `<section class="pbp">${pbHead('DAFTAR HADIR RAPAT', 'Form kosong')}
+  <h3>A. DAFTAR HADIR <small>centang kehadiran · tanda tangan</small></h3>
+  <table class="d"><thead><tr><th style="width:26px">No</th><th style="width:24%">Nama</th><th style="width:15%">Jabatan</th><th style="width:13%">Departemen</th><th style="width:150px">Kehadiran</th><th style="width:12%">Ket.</th><th>Tanda Tangan</th></tr></thead>
+  <tbody>${L(nP).map(i => { const p = pre ? PS[i] || {} : {}; return `<tr><td>${i + 1}</td><td>${esc(p.nama)}</td><td>${esc(p.jabatan)}</td><td>${esc(p.role)}</td><td>${pbCb('Hadir', 'Izin', 'Tidak Hadir')}</td><td></td><td></td></tr>`; }).join('')}</tbody></table>
+  ${pbFt()}</section>`;
+  if (dm) out += `<section class="pbp">${pbHead('MINUTES OF MEETING', 'Notulen Rapat')}
+  <h3>B. PEMBAHASAN <small>satu baris = satu poin</small></h3>
+  ${L(nT).map(i => `<div class="it"><div class="ih"><span>${i + 1}</span><small>Topik</small><i class="fl"></i><em>PIC <i class="fl"></i></em></div>${L(nK).map(k => `<div class="pt bl"><b>${i + 1}.${k + 1}</b><i class="fl"></i></div>`).join('')}</div>`).join('')}
+  ${nA ? `<h3>C. TINDAK LANJUT <small>(opsional)</small></h3><table class="d"><thead><tr><th style="width:26px">No</th><th>Tindakan</th><th style="width:17%">PIC</th><th style="width:12%">Deadline</th><th style="width:165px">Status</th></tr></thead><tbody>${L(nA).map(i => `<tr><td>${i + 1}</td><td></td><td></td><td></td><td>${pbCb('Open', 'Progress', 'Selesai')}</td></tr>`).join('')}</tbody></table>` : ''}
+  <div class="sig"><div>Dibuat oleh,<br>Notulen<i></i><b>( ............................ )</b></div><div>Disetujui oleh,<br>Pimpinan Rapat<i></i><b>( ............................ )</b></div></div>
+  ${pbFt()}</section>`;
+  $('#pbOut').innerHTML = out; pbClose(); document.body.classList.add('pb');
+  const done = () => { document.body.classList.remove('pb'); window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  setTimeout(() => window.print(), 250);
 }
 $('#hl').src = LOGO;
 AUTH ? boot() : initLogin();
